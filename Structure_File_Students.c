@@ -51,7 +51,7 @@ void my_menu()
         if (c==72)
         {
             if(op>1) op--;
-            else op = 4;
+            else op = 6;
         }
         if (c == 13)
         {
