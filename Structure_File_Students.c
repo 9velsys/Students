@@ -25,6 +25,7 @@ int main()
 }
 void my_menu()
 {
+    system("CLS");
     int op=1, cuop;
     char c=0;
     while(c != 13)
@@ -77,6 +78,7 @@ void my_write()
     {
         while(1)
         {
+            s.avr=0;
             printf("Number:");
             scanf("%d",&s.num);
             if(s.num==0) break;
@@ -95,6 +97,8 @@ void my_write()
         }
         fclose(f);
     }
+    system("pause");
+    my_menu();
 }
 void my_read()
 {
@@ -106,18 +110,23 @@ void my_read()
     {
         while(!feof(f))
         {
-            fread(&s,sizeof(s),1,f);
-            printf("\nNum:%d \nName: %s",s.num,s.name);
-            i=0;
-            while(s.marks[i])
+            if(fread(&s,sizeof(s),1,f))
             {
-                printf("\nMarks: %d",s.marks[i]);
-                i++;
+                printf("\nNum:%d \nName: %s",s.num,s.name);
+                i=0;
+                while(s.marks[i])
+                {
+                    printf("\nMarks: %d",s.marks[i]);
+                    i++;
+                }
+                printf("\nAvr:%.2f",s.avr);
             }
-            printf("\nAvr:%.2f",s.avr);
         }
         fclose(f);
     }
+
+    system("pause");
+    my_menu();
 }
 void my_add()
 {
@@ -148,6 +157,8 @@ void my_add()
         }
         fclose(f);
     }
+    system("pause");
+    my_menu();
 
 }
 void my_delete()
@@ -161,9 +172,9 @@ void my_delete()
     f_9v = fopen("9v.dat","r");
     while(!feof(f_9v))
     {
-        fread(&s,sizeof(s),1,f_9v);
-        if(num_delete!=s.num)
-            fwrite(&s,sizeof(s),1,f_tp);
+        if(fread(&s,sizeof(s),1,f_9v))
+            if(num_delete!=s.num)
+                fwrite(&s,sizeof(s),1,f_tp);
     }
     fclose(f_9v);
     fclose(f_tp);
@@ -176,6 +187,7 @@ void my_delete()
     }
     fclose(f_9v);
     fclose(f_tp);
+    my_menu();
 }
 void my_edit()
 {
@@ -188,26 +200,29 @@ void my_edit()
     f_9v = fopen("9v.dat","r");
     while(!feof(f_9v))
     {
-        fread(&s,sizeof(s),1,f_9v);
-        if(num_edit!=s.num)
-            fwrite(&s,sizeof(s),1,f_tp);
-        else
+        if(fread(&s,sizeof(s),1,f_9v))
         {
-            printf("Number:");
-            scanf("%d",&s.num);
-            if(s.num==0) break;
-            printf("\nName:");
-            gets(s.name);
-            gets(s.name);
-            for(j=0;1;j++)
+            if(num_edit!=s.num)
+                fwrite(&s,sizeof(s),1,f_tp);
+            else
             {
-                printf("\nGrade No %d:",j+1);
-                scanf("%d",&s.marks[j]);
-                if(s.marks[j]==0) break;
-                s.avr+=s.marks[j];
+                printf("Number:");
+                scanf("%d",&s.num);
+                if(s.num==0) break;
+                printf("\nName:");
+                gets(s.name);
+                gets(s.name);
+                s.avr=0;
+                for(j=0;1;j++)
+                {
+                    printf("\nGrade No %d:",j+1);
+                    scanf("%d",&s.marks[j]);
+                    if(s.marks[j]==0) break;
+                    s.avr+=s.marks[j];
+                }
+                s.avr/=j;
+                fwrite(&s,sizeof(s),1,f_tp);
             }
-            s.avr/=j;
-            fwrite(&s,sizeof(s),1,f_tp);
         }
 
     }
@@ -217,9 +232,12 @@ void my_edit()
     f_tp = fopen("temp.dat","r");
     while(!feof(f_tp))
     {
-        fread(&s,sizeof(s),1,f_tp);
-        fwrite(&s,sizeof(s),1,f_9v);
+        if(fread(&s,sizeof(s),1,f_tp))
+            fwrite(&s,sizeof(s),1,f_9v);
     }
     fclose(f_9v);
     fclose(f_tp);
+
+    system("pause");
+    my_menu();
 }
